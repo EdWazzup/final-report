@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>final report</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+</head>
+<body>
+    <div id="app">
+
+        <div class="form-area">
+            <label for="inputTotalAmount"></label>入:<input type="number" id="inputTotalAmount" v-model="inputTotalAmount">
+            <label for="fee"></label>服務費用(%):<input type="number" id="fee" v-model="inputServiceFee">
+            <label for="rate"></label>匯率:<input type="number" id="rate" v-model="inputUsdtRate">
+            <button class="confirm-btn" @click="calculateResult">確認</button>
+        </div>
+
+         <div
+            v-if="displayData"
+            class="display-area"
+        >
+
+           <div class="cal-info">
+            {{ displayTotalAmount }} * {{ displayServiceFee }} = {{ displayReturnAmount }}
+           </div>
+
+            <div class="return-u-info">
+                回U: {{ displayReturnUsdtAmount }}
+                <p>
+                    (匯率 / {{ displayUsdtRate }} )
+                </p>
+            </div>
+         </div>
+
+    </div>
+
+
+
+    <script>
+
+        var app = new Vue({
+
+        el: '#app',
+            data: {
+
+                inputTotalAmount:'', //輸入
+                inputUsdtRate:'', //輸入
+                inputServiceFee:'', // 輸入
+
+
+                displayTotalAmount:'',
+                displayReturnAmount:'',
+                displayServiceFee:'',
+                displayUsdtRate:'',
+                displayReturnUsdtAmount:'',
+
+                displayData: false,
+            },
+
+            methods:{
+                calculateResult(){
+
+                    if(!this.inputTotalAmount || !this.inputUsdtRate || !this.inputServiceFee){
+                        alert('請填寫')
+                        return;
+                    }
+
+                    this.displayTotalAmount = this.inputTotalAmount; //記下入
+                    this.displayUsdtRate = this.inputUsdtRate; //記下u匯
+
+                    this.displayServiceFee = (100 - this.inputServiceFee) / 100;
+
+                    this.displayReturnAmount = Math.floor((this.inputTotalAmount * this.displayServiceFee));
+
+                    this.displayReturnUsdtAmount = (this.displayReturnAmount / this.displayUsdtRate).toFixed(2);
+
+                    this.displayData = true;
+
+                    // 清空
+                    this.inputTotalAmount = '';
+                    this.inputUsdtRate = '';
+                    this.inputServiceFee = '';
+
+                    alert('計算完成')
+
+
+                    // console.log('displayServiceFee', this.displayServiceFee);
+                    // console.log('displayReturnAmount', this.displayReturnAmount)
+                    // console.log('displayUsdtRate', this.displayUsdtRate);
+                    // console.log('回u', this.displayReturnUsdtAmount)
+
+                }
+            }
+        })
+
+
+    </script>
+
+    <style>
+
+        *{
+            margin:0;
+            padding: 0;
+        }
+
+        #app{
+            padding: 10px;
+            height: 100vh;
+            background: linear-gradient(90deg,#ffffff, #3f4370);
+        }
+
+        html, body{
+            width: 100%;
+        }
+
+        .form-area{
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            background-color: rgb(221, 160, 160);
+            margin-bottom: 5px;
+        }
+
+        .confirm-btn{
+            width: 20%;
+            padding: 3px;
+            margin-top: 5px;
+            border-radius: 2px;
+            border: none;
+            color: white;
+            background-color: rgb(0, 0, 0);
+            cursor: pointer;
+        }
+
+        .cal-info{
+            margin: 10px 0;
+            padding: 10px;
+            background-color: rgb(221, 160, 160);
+        }
+
+        .return-u-info{
+            background-color: rgb(151, 236, 117);
+            padding: 10px;
+        }
+
+        input{
+            /* border: 1px solid blue; */
+            height: 20px;
+            border-radius: 2px;
+        }
+
+        
+        
+    </style>
+</body>
+</html>
